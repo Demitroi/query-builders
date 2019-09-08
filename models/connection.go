@@ -10,13 +10,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Pool is the connection pool to database
-var Pool *sql.DB
+// DB is the connection pool to database
+var DB *sql.DB
 
 // ConnectionConfig is the parameters to open connection pool
 type ConnectionConfig struct {
 	User, Password, Protocol, Address, DbName string
-	Port int
+	Port                                      int
 }
 
 // OpenConnection opens the connection pool
@@ -42,6 +42,6 @@ func OpenConnection(cfg ConnectionConfig) error {
 	if err != nil {
 		return errors.Wrap(err, "Failed to ping database connection")
 	}
-	Pool = db
+	DB = db
 	return nil
 }

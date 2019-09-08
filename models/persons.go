@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/tiaotiao/mapstruct"
 )
 
 // Person represents a customer model
@@ -12,6 +14,11 @@ type Person struct {
 	BirthDate *time.Time `json:"birthdate"`
 	Weight    *float32   `json:"weight"`
 	Height    *float32   `json:"height"`
+}
+
+// ToMap converts person struct to mpa
+func (p *Person) ToMap() map[string]interface{} {
+	return mapstruct.Struct2MapTag(p, "json")
 }
 
 // PersonMethods represents the person's methods that must be implemented

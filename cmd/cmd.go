@@ -15,11 +15,11 @@ import (
 // see https://semver.org/
 const VERSION = "0.0.0"
 
-var port int
-
-var connectionConfig models.ConnectionConfig
-
-var availableBuilders = [...]string{"gendry", "goqu", "dbx"}
+var (
+	port              int
+	connectionConfig  models.ConnectionConfig
+	availableBuilders = [...]string{"gendry", "goqu", "dbx"}
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "query-builder [flags] [builder]",
@@ -42,20 +42,20 @@ var rootCmd = &cobra.Command{
 			fmt.Printf("Builder %s not found\nAvailable builders: %v\n", builder, availableBuilders)
 			os.Exit(1)
 		}
-		// Select the builder
-		switch builder {
-		case "gendry":
-			models.SelectedQueryBuilder = gendry.New()
-		case "goqu":
-			models.SelectedQueryBuilder = goqu.New()
-		case "dbx":
-			models.SelectedQueryBuilder = dbx.New()
-		}
 		// Open database connection
 		err := models.OpenConnection(connectionConfig)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
+		}
+		// Select the builder
+		switch builder {
+		case "gendry":
+			models.SelectedQueryBuilder = gendry.New(models.DB)
+		case "goqu":
+			models.SelectedQueryBuilder = goqu.New()
+		case "dbx":
+			models.SelectedQueryBuilder = dbx.New()
 		}
 		// TODO: start http listener
 	},
