@@ -44,7 +44,7 @@ func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
 	return
 }
 
-func (*queryBuilder) ListPersons(filter map[string]interface{}) (persons []models.Person, err error) {
+func (*queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
 	return
 }
 

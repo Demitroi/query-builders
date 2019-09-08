@@ -16,6 +16,22 @@ type Person struct {
 	Height    *float32   `json:"height"`
 }
 
+// FilterPerson filters the results of select statement
+type FilterPerson struct {
+	ID             *string    `field:"id"        operator:"="`
+	Name           *string    `field:"name"      operator:"="`
+	City           *[]string  `field:"city"      operator:"in"`
+	BirthDate      *time.Time `field:"birthdate" operator:"="`
+	BirthDateStart *time.Time `field:"birthdate" operator:">="`
+	BirthDateEnd   *time.Time `field:"birthdate" operator:"<="`
+	Weight         *float32   `field:"weight"    operator:"="`
+	WeightStart    *float32   `field:"weight"    operator:">="`
+	WeightEnd      *float32   `field:"weight"    operator:"<="`
+	Height         *float32   `field:"height"    operator:"="`
+	HeightStart    *float32   `field:"height"    operator:">="`
+	HeightEnd      *float32   `field:"height"    operator:"<="`
+}
+
 // ToMap converts person struct to mpa
 func (p *Person) ToMap() map[string]interface{} {
 	return mapstruct.Struct2MapTag(p, "json")
@@ -25,7 +41,7 @@ func (p *Person) ToMap() map[string]interface{} {
 type PersonMethods interface {
 	AddPerson(person Person) (lastID string, err error)
 	GetPerson(id string) (person Person, err error)
-	ListPersons(filter map[string]interface{}) (persons []Person, err error)
+	ListPersons(filter FilterPerson) (persons []Person, err error)
 	UpdatePerson(id string, person Person) (err error)
 	DeletePerson(id string) (err error)
 }
