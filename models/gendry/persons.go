@@ -28,8 +28,12 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 }
 
 func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
-	rows, err := qb.DB.Query(`SELECT id, name, city, birthdate, weight, height
-		FROM personas WHERE id=?`, id)
+	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	query, vals, err := builder.BuildSelect("personas", map[string]interface{}{"id": id}, selectFields)
+	if err != nil {
+		return person, errors.Wrap(err, "Failed to build query")
+	}
+	rows, err := qb.DB.Query(query, vals...)
 	if err != nil {
 		return person, errors.Wrap(err, "Falied to perform query")
 	}
