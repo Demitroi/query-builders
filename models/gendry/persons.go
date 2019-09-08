@@ -2,7 +2,8 @@ package gendry
 
 import (
 	"github.com/Demitroi/query-builders/models"
-	builder "github.com/didi/gendry/builder"
+	"github.com/didi/gendry/builder"
+	"github.com/didi/gendry/scanner"
 	"github.com/pkg/errors"
 	"github.com/spf13/cast"
 )
@@ -26,7 +27,16 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (*queryBuilder) GetPerson(id string) (person models.Person, err error) {
+func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
+	rows, err := qb.DB.Query(`SELECT id, name, city, birthdate, weight, height
+		FROM personas WHERE id=?`, id)
+	if err != nil {
+		return person, errors.Wrap(err, "Falied to perform query")
+	}
+	err = scanner.ScanClose(rows, &person)
+	if err != nil {
+		return person, errors.Wrap(err, "Failed to scan")
+	}
 	return
 }
 

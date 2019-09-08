@@ -33,3 +33,24 @@ func TestAddPerson(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestGetPerson(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	qb := gendry.New(db)
+	birthDate, err := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
+	if err != nil {
+		t.Fatal(err)
+	}
+	columns := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	mock.ExpectQuery("SELECT id, name, city, birthdate, weight, height FROM personas WHERE id=?").
+		WithArgs("1").
+		WillReturnRows(sqlmock.NewRows(columns).AddRow("1", "Ash Ketchum", "Pallet Town", birthDate, float32(91), float32(1.81)))
+	_, err = qb.GetPerson("1")
+	if err != nil {
+		t.Error(err)
+	}
+}
