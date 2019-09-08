@@ -7,8 +7,3 @@ type QueryBuilder interface {
 
 // SelectedQueryBuilder is the QueryBuilder selected
 var SelectedQueryBuilder QueryBuilder
-
-// SelectQueryBuilder allows select QueryBuilder
-func SelectQueryBuilder(querybuilder QueryBuilder) {
-	SelectedQueryBuilder = querybuilder
-}
