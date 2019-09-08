@@ -1,0 +1,45 @@
+package models
+
+import (
+	"database/sql"
+	"fmt"
+	"time"
+
+	// mysql driver
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/pkg/errors"
+)
+
+// Pool is the connection pool to database
+var Pool *sql.DB
+
+// ConnectionConfig is the parameters to open connection pool
+type ConnectionConfig struct {
+	User, Password, Protocol, Address, DbName string
+}
+
+// OpenConnection opens the connection pool
+func OpenConnection(cfg ConnectionConfig) error {
+	// See https://github.com/Go-SQL-Driver/MySQL/#dsn-data-source-name
+	connectionString := fmt.Sprintf("%s:%s@%s(%s)/%s?collation=utf8_general_ci",
+		cfg.User,
+		cfg.Password,
+		cfg.Protocol,
+		cfg.Address,
+		cfg.DbName,
+	)
+	db, err := sql.Open("mysql", connectionString)
+	if err != nil {
+		return errors.Wrap(err, "Failed to open connection")
+	}
+	// See http://go-database-sql.org/connection-pool.html
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(5)
+	db.SetConnMaxLifetime(time.Second * 25)
+	err = db.Ping()
+	if err != nil {
+		return errors.Wrap(err, "Failed to ping database connection")
+	}
+	Pool = db
+	return nil
+}
