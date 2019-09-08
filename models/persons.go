@@ -8,6 +8,7 @@ import (
 type Person struct {
 	ID        *string    `json:"id"`
 	Name      *string    `json:"name"`
+	City      *string    `json:"city"`
 	BirthDate *time.Time `json:"birthdate"`
 	Weight    *float32   `json:"weight"`
 	Height    *float32   `json:"height"`

@@ -48,6 +48,7 @@ var rootCmd = &cobra.Command{
 			case  "dbx":
 				models.SelectedQueryBuilder = dbx.New()
 		}
+		// TODO: start http listener
 	},
 }
 
