@@ -16,6 +16,11 @@ type Person struct {
 	Height    *float32   `json:"height"`
 }
 
+// ToMap converts person struct to mpa
+func (p *Person) ToMap() map[string]interface{} {
+	return mapstruct.Struct2MapTag(p, "json")
+}
+
 // FilterPerson filters the results of select statement
 type FilterPerson struct {
 	ID             *string    `field:"id"        operator:"="`
@@ -32,9 +37,9 @@ type FilterPerson struct {
 	HeightEnd      *float32   `field:"height"    operator:"<="`
 }
 
-// ToMap converts person struct to mpa
-func (p *Person) ToMap() map[string]interface{} {
-	return mapstruct.Struct2MapTag(p, "json")
+// ForEach iterates over the FilterPerson fields
+func (fp *FilterPerson) ForEach(fn ForEachFunc) error {
+	return ForEachFilter(fp, fn)
 }
 
 // PersonMethods represents the person's methods that must be implemented
