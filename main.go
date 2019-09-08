@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
+	"github.com/Demitroi/query-builders/cmd"
 )
 
 func main() {
-	log.Println("Hola")
+	cmd.Execute()
 }
