@@ -30,6 +30,9 @@ func ForEachFilter(s interface{}, fn ForEachFunc) error {
 		if !fv.CanInterface() {
 			continue
 		}
+		if fv.IsNil() { // skip nil values
+			continue
+		}
 		if ft.PkgPath != "" { // unexported
 			continue
 		}
@@ -44,13 +47,6 @@ func ForEachFilter(s interface{}, fn ForEachFunc) error {
 		if option == "omitempty" {
 			if isEmpty(&fv) {
 				continue // skip empty field
-			}
-		}
-		if option == "string" {
-			s := toString(fv)
-			if s != nil {
-				m[field] = s
-				continue
 			}
 		}
 		operator, ok := ft.Tag.Lookup("operator")
@@ -97,14 +93,11 @@ func isEmpty(v *reflect.Value) bool {
 
 func parseTag(tag string) (string, string) {
 	tags := strings.Split(tag, ",")
-
 	if len(tags) <= 0 {
 		return "", ""
 	}
-
 	if len(tags) == 1 {
 		return tags[0], ""
 	}
-
 	return tags[0], tags[1]
 }
