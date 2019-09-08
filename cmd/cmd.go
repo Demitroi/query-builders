@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
 	"github.com/Demitroi/query-builders/models"
 	"github.com/Demitroi/query-builders/models/gendry"
 	"github.com/Demitroi/query-builders/models/goqu"
-	"github.com/Demitroi/query-builders/models/ozzo-dbx"
+	dbx "github.com/Demitroi/query-builders/models/ozzo-dbx"
+	"github.com/spf13/cobra"
 )
 
 // VERSION must be incremented with each release
@@ -16,6 +16,8 @@ import (
 const VERSION = "0.0.0"
 
 var port int
+
+var connectionConfig models.ConnectionConfig
 
 var availableBuilders = [...]string{"gendry", "goqu", "dbx"}
 
@@ -40,13 +42,20 @@ var rootCmd = &cobra.Command{
 			fmt.Printf("Builder %s not found\nAvailable builders: %v\n", builder, availableBuilders)
 			os.Exit(1)
 		}
+		// Select the builder
 		switch builder {
-			case "gendry":
-				models.SelectedQueryBuilder = gendry.New()
-			case "goqu":
-				models.SelectedQueryBuilder = goqu.New()
-			case  "dbx":
-				models.SelectedQueryBuilder = dbx.New()
+		case "gendry":
+			models.SelectedQueryBuilder = gendry.New()
+		case "goqu":
+			models.SelectedQueryBuilder = goqu.New()
+		case "dbx":
+			models.SelectedQueryBuilder = dbx.New()
+		}
+		// Open database connection
+		err := models.OpenConnection(connectionConfig)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
 		// TODO: start http listener
 	},
@@ -54,6 +63,12 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.PersistentFlags().IntVarP(&port, "port", "p", 1081, "Port to serve")
+	rootCmd.PersistentFlags().StringVarP(&connectionConfig.User, "database-user", "", "root", "Database user")
+	rootCmd.PersistentFlags().StringVarP(&connectionConfig.Password, "database-password", "", "", "Database user password")
+	rootCmd.PersistentFlags().StringVarP(&connectionConfig.Protocol, "database-protocol", "", "tcp", "Database connection protocol")
+	rootCmd.PersistentFlags().StringVarP(&connectionConfig.Address, "database-address", "", "localhost", "Database connection address")
+	rootCmd.PersistentFlags().IntVarP(&connectionConfig.Port, "database-port", "", 3306, "Database connection port")
+	rootCmd.PersistentFlags().StringVarP(&connectionConfig.DbName, "database-name", "", "query_builders", "Database name")
 }
 
 // Execute the cmd

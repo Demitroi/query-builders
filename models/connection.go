@@ -16,16 +16,18 @@ var Pool *sql.DB
 // ConnectionConfig is the parameters to open connection pool
 type ConnectionConfig struct {
 	User, Password, Protocol, Address, DbName string
+	Port int
 }
 
 // OpenConnection opens the connection pool
 func OpenConnection(cfg ConnectionConfig) error {
 	// See https://github.com/Go-SQL-Driver/MySQL/#dsn-data-source-name
-	connectionString := fmt.Sprintf("%s:%s@%s(%s)/%s?collation=utf8_general_ci",
+	connectionString := fmt.Sprintf("%s:%s@%s(%s:%v)/%s?collation=utf8_general_ci",
 		cfg.User,
 		cfg.Password,
 		cfg.Protocol,
 		cfg.Address,
+		cfg.Port,
 		cfg.DbName,
 	)
 	db, err := sql.Open("mysql", connectionString)
