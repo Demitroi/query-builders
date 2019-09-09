@@ -85,6 +85,17 @@ func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error
 	return nil
 }
 
-func (*queryBuilder) DeletePerson(id string) (err error) {
+func (qb *queryBuilder) DeletePerson(id string) (err error) {
+	where := map[string]interface{}{
+		"id =": id,
+	}
+	query, args, err := builder.BuildDelete("personas", where)
+	if err != nil {
+		return errors.Wrap(err, "Failed to build query")
+	}
+	_, err = qb.DB.Exec(query, args...)
+	if err != nil {
+		return errors.Wrap(err, "Failed to exec query")
+	}
 	return
 }
