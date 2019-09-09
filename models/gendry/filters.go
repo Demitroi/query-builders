@@ -8,6 +8,7 @@ import (
 )
 
 func (qb *queryBuilder) GenerateWhere(filter models.Filter) (where map[string]interface{}, err error) {
+	where = make(map[string]interface{})
 	err = filter.ForEach(func(field string, operator string, value interface{}) error {
 		switch operator {
 		case "=":

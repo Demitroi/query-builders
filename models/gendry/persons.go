@@ -29,7 +29,10 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 
 func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
 	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
-	query, vals, err := builder.BuildSelect("personas", map[string]interface{}{"id": id}, selectFields)
+	where := map[string]interface{}{
+		"id =": id,
+	}
+	query, vals, err := builder.BuildSelect("personas", where, selectFields)
 	if err != nil {
 		return person, errors.Wrap(err, "Failed to build query")
 	}
@@ -44,7 +47,24 @@ func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
 	return
 }
 
-func (*queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
+func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
+	where, err := qb.GenerateWhere(&filter)
+	if err != nil {
+		return persons, errors.Wrap(err, "Failed to generate where")
+	}
+	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	query, vals, err := builder.BuildSelect("personas", where, selectFields)
+	if err != nil {
+		return persons, errors.Wrap(err, "Failed to build query")
+	}
+	rows, err := qb.DB.Query(query, vals...)
+	if err != nil {
+		return persons, errors.Wrap(err, "Falied to perform query")
+	}
+	err = scanner.ScanClose(rows, &persons)
+	if err != nil {
+		return persons, errors.Wrap(err, "Failed to scan")
+	}
 	return
 }
 
