@@ -53,7 +53,7 @@ var rootCmd = &cobra.Command{
 		case "gendry":
 			models.SelectedQueryBuilder = gendry.New(models.DB)
 		case "goqu":
-			models.SelectedQueryBuilder = goqu.New()
+			models.SelectedQueryBuilder = goqu.New(models.DB)
 		case "dbx":
 			models.SelectedQueryBuilder = dbx.New()
 		}
