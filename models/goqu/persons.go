@@ -2,18 +2,13 @@ package goqu
 
 import (
 	"github.com/Demitroi/query-builders/models"
-	"github.com/doug-martin/goqu/v8"
 	"github.com/pkg/errors"
 	"github.com/spf13/cast"
-	// import the dialect
-	_ "github.com/doug-martin/goqu/v8/dialect/mysql"
 )
 
 func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err error) {
-	// look up the dialect
-    dialect := goqu.Dialect("mysql")
 	m := person.ToMap()
-	query, args, err := dialect.Insert("personas").Rows(m).ToSQL()
+	query, args, err := qb.dialect.Insert("personas").Rows(m).ToSQL()
 	if err != nil {
 		return "", errors.Wrap(err, "Failed to build query")
 	}
