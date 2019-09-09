@@ -15,7 +15,7 @@ func TestAddPerson(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
-	mock.ExpectExec("INSERT INTO `personas`").
+	mock.ExpectExec("INSERT INTO `persons`").
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	qb := goqu.New(db)
 	birthDate, err := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")

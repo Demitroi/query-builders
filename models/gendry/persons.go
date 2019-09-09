@@ -12,7 +12,7 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	var insert []map[string]interface{}
 	m := person.ToMap()
 	insert = append(insert, m)
-	query, args, err := builder.BuildInsert("personas", insert)
+	query, args, err := builder.BuildInsert("persons", insert)
 	if err != nil {
 		return "", errors.Wrap(err, "Failed to build query")
 	}
@@ -32,7 +32,7 @@ func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
 	where := map[string]interface{}{
 		"id =": id,
 	}
-	query, args, err := builder.BuildSelect("personas", where, selectFields)
+	query, args, err := builder.BuildSelect("persons", where, selectFields)
 	if err != nil {
 		return person, errors.Wrap(err, "Failed to build query")
 	}
@@ -53,7 +53,7 @@ func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []model
 		return persons, errors.Wrap(err, "Failed to generate where")
 	}
 	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
-	query, args, err := builder.BuildSelect("personas", where, selectFields)
+	query, args, err := builder.BuildSelect("persons", where, selectFields)
 	if err != nil {
 		return persons, errors.Wrap(err, "Failed to build query")
 	}
@@ -74,7 +74,7 @@ func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error
 	where := map[string]interface{}{
 		"id =": id,
 	}
-	query, args, err := builder.BuildUpdate("personas", where, update)
+	query, args, err := builder.BuildUpdate("persons", where, update)
 	if err != nil {
 		return errors.Wrap(err, "Failed to build query")
 	}
@@ -89,7 +89,7 @@ func (qb *queryBuilder) DeletePerson(id string) (err error) {
 	where := map[string]interface{}{
 		"id =": id,
 	}
-	query, args, err := builder.BuildDelete("personas", where)
+	query, args, err := builder.BuildDelete("persons", where)
 	if err != nil {
 		return errors.Wrap(err, "Failed to build query")
 	}

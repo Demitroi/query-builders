@@ -8,7 +8,7 @@ import (
 
 func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err error) {
 	m := person.ToMap()
-	query, args, err := qb.dialect.Insert("personas").Rows(m).ToSQL()
+	query, args, err := qb.dialect.Insert("persons").Rows(m).ToSQL()
 	if err != nil {
 		return "", errors.Wrap(err, "Failed to build query")
 	}
@@ -23,7 +23,9 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (*queryBuilder) GetPerson(id string) (person models.Person, err error) {
+func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
+	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	qb.dialect.From("").Select(selectFields)
 	return
 }
 
