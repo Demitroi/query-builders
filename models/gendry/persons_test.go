@@ -15,7 +15,8 @@ func TestAddPerson(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
-	mock.ExpectExec("INSERT INTO personas").WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("INSERT INTO personas").
+		WillReturnResult(sqlmock.NewResult(1, 1))
 	qb := gendry.New(db)
 	birthDate, err := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
 	if err != nil {
@@ -44,7 +45,8 @@ func TestGetPerson(t *testing.T) {
 	birthDate, err := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
 	mock.ExpectQuery("SELECT id,name,city,birthdate,weight,height FROM personas").
 		WithArgs("1").
-		WillReturnRows(sqlmock.NewRows(columns).AddRow("1", "Ash Ketchum", "Pallet Town", birthDate, float32(91), float32(1.81)))
+		WillReturnRows(sqlmock.NewRows(columns).
+			AddRow("1", "Ash Ketchum", "Pallet Town", birthDate, float32(91), float32(1.81)))
 	qb := gendry.New(db)
 	if err != nil {
 		t.Fatal(err)
@@ -65,7 +67,8 @@ func TestListPersons(t *testing.T) {
 	birthDate, err := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
 	mock.ExpectQuery("SELECT id,name,city,birthdate,weight,height FROM personas").
 		WithArgs("1").
-		WillReturnRows(sqlmock.NewRows(columns).AddRow("1", "Ash Ketchum", "Pallet Town", birthDate, float32(91), float32(1.81)))
+		WillReturnRows(sqlmock.NewRows(columns).
+			AddRow("1", "Ash Ketchum", "Pallet Town", birthDate, float32(91), float32(1.81)))
 	qb := gendry.New(db)
 	filterPersonas := models.FilterPerson{
 		ID: &[]string{"1"}[0],
@@ -76,5 +79,21 @@ func TestListPersons(t *testing.T) {
 	}
 	if len(persons) == 0 {
 		t.Error("Persons should not be empty")
+	}
+}
+
+func TestUpdatePerson(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	mock.ExpectExec("UPDATE personas").
+		WillReturnResult(sqlmock.NewResult(0, 1))
+	qb := gendry.New(db)
+	var person models.Person
+	err = qb.UpdatePerson("1", person)
+	if err != nil {
+		t.Error(err)
 	}
 }
