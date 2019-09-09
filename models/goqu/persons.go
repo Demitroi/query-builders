@@ -2,13 +2,14 @@ package goqu
 
 import (
 	"github.com/Demitroi/query-builders/models"
+	"github.com/doug-martin/goqu/v8"
 	"github.com/pkg/errors"
 	"github.com/spf13/cast"
 )
 
 func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err error) {
 	m := person.ToMap()
-	query, args, err := qb.dialect.Insert("persons").Rows(m).ToSQL()
+	query, args, err := qb.database.Insert("persons").Rows(m).ToSQL()
 	if err != nil {
 		return "", errors.Wrap(err, "Failed to build query")
 	}
@@ -24,8 +25,11 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 }
 
 func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
-	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
-	qb.dialect.From("").Select(selectFields)
+	selectFields := []interface{}{"id", "name", "city", "birthdate", "weight", "height"}
+	where := goqu.Ex{
+		"id": id,
+	}
+	_, err = qb.database.From("persons").Select(selectFields...).Where(where).Prepared(true).ScanStruct(&person)
 	return
 }
 
