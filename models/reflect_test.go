@@ -16,7 +16,8 @@ func TestForEachFilter(t *testing.T) {
 		Weight    *float32   `field:"weight"    operator:"="`
 	}
 	filterPerson := FilterPerson{
-		ID: &[]string{"4"}[0],
+		ID:   &[]string{"4"}[0],
+		City: &[]string{"Pallet Town", "Viridian City", "Pewter City"},
 	}
 	err := models.ForEachFilter(filterPerson, func(field, operator string, value interface{}) error {
 		return nil

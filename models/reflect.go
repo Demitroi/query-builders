@@ -12,10 +12,10 @@ import (
 type ForEachFunc func(field, operator string, value interface{}) error
 
 // ForEachFilter reflects the struct an executes fn
-func ForEachFilter(s interface{}, fn ForEachFunc) error {
+func ForEachFilter(stru interface{}, fn ForEachFunc) error {
 	tagName := "field"
-	t := reflect.TypeOf(s)
-	v := reflect.ValueOf(s)
+	t := reflect.TypeOf(stru)
+	v := reflect.ValueOf(stru)
 	if v.Kind() == reflect.Ptr && v.Elem().Kind() == reflect.Struct {
 		t = t.Elem()
 		v = v.Elem()
@@ -23,7 +23,6 @@ func ForEachFilter(s interface{}, fn ForEachFunc) error {
 	if v.Kind() != reflect.Struct {
 		return nil
 	}
-	m := make(map[string]interface{})
 	for i := 0; i < t.NumField(); i++ {
 		fv := v.Field(i)
 		ft := t.Field(i)
@@ -53,8 +52,8 @@ func ForEachFilter(s interface{}, fn ForEachFunc) error {
 		if !ok {
 			return errors.Errorf("operator tag required in field %s", field)
 		}
-		m[field] = fv.Interface()
-		if err := fn(field, operator, m[field]); err != nil {
+		value := fv.Interface()
+		if err := fn(field, operator, value); err != nil {
 			return errors.Wrap(err, "Failed to exec ForeachFunc")
 		}
 	}
