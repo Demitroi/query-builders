@@ -46,7 +46,16 @@ func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []model
 	return
 }
 
-func (*queryBuilder) UpdatePerson(id string, person models.Person) (err error) {
+func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error) {
+	update := person.ToMap()
+	delete(update, "id") // Don't update the id
+	where := goqu.Ex{
+		"id": id,
+	}
+	_, err = qb.database.Update("persons").Set(update).Where(where).Executor().Exec()
+	if err != nil {
+		return errors.Wrap(err, "Failed to exec query")
+	}
 	return
 }
 

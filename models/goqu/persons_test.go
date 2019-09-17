@@ -81,3 +81,19 @@ func TestListPersons(t *testing.T) {
 		t.Error("Persons should not be empty")
 	}
 }
+
+func TestUpdatePerson(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	mock.ExpectExec("UPDATE `persons`").
+		WillReturnResult(sqlmock.NewResult(0, 1))
+	qb := goqu.New(db)
+	var person models.Person
+	err = qb.UpdatePerson("1", person)
+	if err != nil {
+		t.Error(err)
+	}
+}
