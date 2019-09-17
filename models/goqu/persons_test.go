@@ -97,3 +97,19 @@ func TestUpdatePerson(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestDeletePerson(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	mock.ExpectExec("DELETE FROM `persons`").
+		WithArgs("1").
+		WillReturnResult(sqlmock.NewResult(0, 1))
+	qb := goqu.New(db)
+	err = qb.DeletePerson("1")
+	if err != nil {
+		t.Error(err)
+	}
+}

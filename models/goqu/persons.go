@@ -48,14 +48,20 @@ func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error
 	where := goqu.Ex{
 		"id": id,
 	}
-	_, err = qb.database.Update("persons").Set(update).Where(where).Executor().Exec()
+	_, err = qb.database.Update("persons").Set(update).Where(where).Prepared(true).Executor().Exec()
 	if err != nil {
 		return errors.Wrap(err, "Failed to exec query")
 	}
 	return
 }
 
-func (*queryBuilder) DeletePerson(id string) (err error) {
-
+func (qb *queryBuilder) DeletePerson(id string) (err error) {
+	where := goqu.Ex{
+		"id": id,
+	}
+	_, err = qb.database.Delete("persons").Where(where).Prepared(true).Executor().Exec()
+	if err != nil {
+		return errors.Wrap(err, "Failed to exec query")
+	}
 	return
 }
