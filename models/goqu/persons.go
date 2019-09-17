@@ -9,11 +9,7 @@ import (
 
 func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err error) {
 	m := person.ToMap()
-	query, args, err := qb.database.Insert("persons").Rows(m).ToSQL()
-	if err != nil {
-		return "", errors.Wrap(err, "Failed to build query")
-	}
-	res, err := qb.DB.Exec(query, args...)
+	res, err := qb.database.Insert("persons").Rows(m).Executor().Exec()
 	if err != nil {
 		return "", errors.Wrap(err, "Failed to exec query")
 	}
@@ -60,5 +56,6 @@ func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error
 }
 
 func (*queryBuilder) DeletePerson(id string) (err error) {
+
 	return
 }
