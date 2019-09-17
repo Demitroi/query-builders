@@ -33,7 +33,16 @@ func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
 	return
 }
 
-func (*queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
+func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
+	selectFields := []interface{}{"id", "name", "city", "birthdate", "weight", "height"}
+	where, err := qb.GenerateWhere(&filter)
+	if err != nil {
+		return persons, errors.Wrap(err, "Failed to generate where")
+	}
+	err = qb.database.From("persons").Select(selectFields...).Where(where).Prepared(true).ScanStructs(&persons)
+	if err != nil {
+		return persons, errors.Wrap(err, "Failed to perform query")
+	}
 	return
 }
 
