@@ -43,7 +43,7 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		// Open database connection
-		err := models.OpenConnection(connectionConfig)
+		connection, err := models.OpenConnection(connectionConfig)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -51,11 +51,11 @@ var rootCmd = &cobra.Command{
 		// Select the builder
 		switch builder {
 		case "gendry":
-			models.SelectedQueryBuilder = gendry.New(models.DB)
+			models.SelectedQueryBuilder = gendry.New(connection)
 		case "goqu":
-			models.SelectedQueryBuilder = goqu.New(models.DB)
+			models.SelectedQueryBuilder = goqu.New(connection)
 		case "dbx":
-			models.SelectedQueryBuilder = dbx.New()
+			models.SelectedQueryBuilder = dbx.New(connection)
 		}
 		// TODO: start http listener
 	},
