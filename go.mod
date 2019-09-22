@@ -6,6 +6,7 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.3.3
 	github.com/didi/gendry v1.3.1
 	github.com/doug-martin/goqu/v8 v8.6.0
+	github.com/go-ozzo/ozzo-dbx v1.0.15
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.2.0 // indirect
