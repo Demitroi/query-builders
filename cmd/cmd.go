@@ -30,18 +30,6 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		builder := args[0]
-		// Search the builder
-		var found bool
-		for _, availableBuilder := range availableBuilders {
-			if builder == availableBuilder {
-				found = true
-				break
-			}
-		}
-		if !found {
-			fmt.Printf("Builder %s not found\nAvailable builders: %v\n", builder, availableBuilders)
-			os.Exit(1)
-		}
 		// Open database connection
 		connection, err := models.OpenConnection(connectionConfig)
 		if err != nil {
@@ -56,6 +44,9 @@ var rootCmd = &cobra.Command{
 			models.SelectedQueryBuilder = goqu.New(connection)
 		case "dbx":
 			models.SelectedQueryBuilder = dbx.New(connection)
+		default:
+			fmt.Printf("Builder %s not found\nAvailable builders: %v\n", builder, availableBuilders)
+			os.Exit(1)
 		}
 		// TODO: start http listener
 	},
