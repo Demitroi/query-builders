@@ -40,7 +40,14 @@ func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []model
 	return
 }
 
-func (*queryBuilder) UpdatePerson(id string, person models.Person) (err error) {
+func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error) {
+	m := person.ToMap()
+	delete(m, "id") // Don't update the id
+	where := dbx.HashExp{"id": id}
+	_, err = qb.database.Update("persons", m, where).Execute()
+	if err != nil {
+		return errors.Wrap(err, "Failed to exec query")
+	}
 	return
 }
 
