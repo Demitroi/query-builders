@@ -51,6 +51,11 @@ func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error
 	return
 }
 
-func (*queryBuilder) DeletePerson(id string) (err error) {
+func (qb *queryBuilder) DeletePerson(id string) (err error) {
+	where := dbx.HashExp{"id": id}
+	_, err = qb.database.Delete("persons", where).Execute()
+	if err != nil {
+		return errors.Wrap(err, "Failed to exec query")
+	}
 	return
 }
