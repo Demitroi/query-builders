@@ -56,3 +56,28 @@ func TestGetPerson(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestListPersons(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	columns := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	birthDate, err := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
+	mock.ExpectQuery("SELECT `id`, `name`, `city`, `birthdate`, `weight`, `height`").
+		WithArgs("1").
+		WillReturnRows(sqlmock.NewRows(columns).
+			AddRow("1", "Ash Ketchum", "Pallet Town", birthDate, float32(91), float32(1.81)))
+	qb := dbx.New(db)
+	filterPersons := models.FilterPerson{
+		ID: &[]string{"1"}[0],
+	}
+	persons, err := qb.ListPersons(filterPersons)
+	if err != nil {
+		t.Error(err)
+	}
+	if len(persons) == 0 {
+		t.Error("Persons should not be empty")
+	}
+}
