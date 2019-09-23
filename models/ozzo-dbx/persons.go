@@ -2,6 +2,7 @@ package dbx
 
 import (
 	"github.com/Demitroi/query-builders/models"
+	dbx "github.com/go-ozzo/ozzo-dbx"
 	"github.com/pkg/errors"
 	"github.com/spf13/cast"
 )
@@ -19,7 +20,10 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (*queryBuilder) GetPerson(id string) (person models.Person, err error) {
+func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
+	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	conditions := dbx.HashExp{"id": id}
+	err = qb.database.Select(selectFields...).From("persons").Where(conditions).One(&person)
 	return
 }
 
