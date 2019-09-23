@@ -4,10 +4,10 @@ import (
 	"database/sql"
 
 	"github.com/Demitroi/query-builders/models"
-	"github.com/doug-martin/goqu/v8"
+	"github.com/doug-martin/goqu/v9"
 
 	// import the dialect
-	_ "github.com/doug-martin/goqu/v8/dialect/mysql"
+	_ "github.com/doug-martin/goqu/v9/dialect/mysql"
 )
 
 type queryBuilder struct {

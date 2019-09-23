@@ -2,7 +2,7 @@ package goqu
 
 import (
 	"github.com/Demitroi/query-builders/models"
-	"github.com/doug-martin/goqu/v8"
+	"github.com/doug-martin/goqu/v9"
 	"github.com/pkg/errors"
 )
 
