@@ -4,6 +4,3 @@ package models
 type QueryBuilder interface {
 	PersonMethods
 }
-
-// SelectedQueryBuilder is the QueryBuilder selected
-var SelectedQueryBuilder QueryBuilder

@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Demitroi/query-builders/handlers"
 	"github.com/Demitroi/query-builders/models"
 	"github.com/Demitroi/query-builders/models/gendry"
 	"github.com/Demitroi/query-builders/models/goqu"
 	dbx "github.com/Demitroi/query-builders/models/ozzo-dbx"
+	"github.com/kataras/iris"
 	"github.com/spf13/cobra"
 )
 
@@ -24,31 +26,33 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "query-builder [flags] [builder]",
 	Short: "query-builder is an example of mysql databases in golang",
-	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("builder required")
-			os.Exit(1)
-		}
+	Args:  cobra.MinimumNArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
 		builder := args[0]
 		// Open database connection
 		connection, err := models.OpenConnection(connectionConfig)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return err
 		}
 		// Select the builder
 		switch builder {
 		case "gendry":
-			models.SelectedQueryBuilder = gendry.New(connection)
+			handlers.QueryBuilder = gendry.New(connection)
 		case "goqu":
-			models.SelectedQueryBuilder = goqu.New(connection)
+			handlers.QueryBuilder = goqu.New(connection)
 		case "dbx":
-			models.SelectedQueryBuilder = dbx.New(connection)
+			handlers.QueryBuilder = dbx.New(connection)
 		default:
-			fmt.Printf("Builder %s not found\nAvailable builders: %v\n", builder, availableBuilders)
-			os.Exit(1)
+			return fmt.Errorf("builder %s not found, available builders: %v", builder, availableBuilders)
 		}
-		// TODO: start http listener
+		// start http listener
+		irisApp := iris.New()
+		// register routes
+		apiv1 := irisApp.Party("/api/v1")
+		handlers.RegisterPersons(apiv1)
+		// Iniciar el router
+		addr := fmt.Sprintf(":%v", port)
+		return irisApp.Run(iris.Addr(addr))
 	},
 }
 
