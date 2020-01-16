@@ -9,7 +9,7 @@ import (
 	"github.com/Demitroi/query-builders/models/gendry"
 	"github.com/Demitroi/query-builders/models/goqu"
 	dbx "github.com/Demitroi/query-builders/models/ozzo-dbx"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/spf13/cobra"
 )
 
@@ -24,9 +24,10 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "query-builder [flags] [builder]",
-	Short: "query-builder is an example of mysql databases in golang",
-	Args:  cobra.MinimumNArgs(1),
+	Use:          "query-builder [flags] [builder]",
+	Short:        "query-builder is an example of mysql databases in golang",
+	Args:         cobra.MinimumNArgs(1),
+	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		builder := args[0]
 		// Open database connection
