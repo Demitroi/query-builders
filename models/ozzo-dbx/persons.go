@@ -21,14 +21,14 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 }
 
 func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
-	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where := dbx.HashExp{"id": id}
 	err = qb.database.Select(selectFields...).From("persons").Where(where).One(&person)
 	return
 }
 
 func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
-	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where, err := qb.GenerateWhere(&filter)
 	if err != nil {
 		return persons, errors.Wrap(err, "Failed to generate where")

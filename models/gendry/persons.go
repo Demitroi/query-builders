@@ -28,7 +28,7 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 }
 
 func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
-	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where := map[string]interface{}{
 		"id =": id,
 	}
@@ -52,7 +52,7 @@ func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []model
 	if err != nil {
 		return persons, errors.Wrap(err, "Failed to generate where")
 	}
-	selectFields := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	query, args, err := builder.BuildSelect("persons", where, selectFields)
 	if err != nil {
 		return persons, errors.Wrap(err, "Failed to build query")
