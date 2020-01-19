@@ -13,8 +13,10 @@ func RegisterPersons(party iris.Party) {
 	})
 	persons := party.Party("/persons", crs).AllowMethods(iris.MethodOptions)
 	{
-		persons.Get("", func(ctx iris.Context) {
-			ctx.Text("Hello world")
-		})
+		persons.Get("", GetPersons)
+		persons.Get("/{id:int}", GetPersonByID)
+		persons.Post("", AddPerson)
+		persons.Put("/{id:int}", UpdatePerson)
+		persons.Delete("/{id:int}", DeletePerson)
 	}
 }
