@@ -8,12 +8,12 @@ import (
 
 // Person represents a customer model
 type Person struct {
-	ID        *string    `json:"id"`
-	Name      *string    `json:"name"`
-	City      *string    `json:"city"`
-	BirthDate *time.Time `json:"birthdate"`
-	Weight    *float32   `json:"weight"`
-	Height    *float32   `json:"height"`
+	ID        *string    `json:"id"         db:"id"`
+	Name      *string    `json:"name"       db:"name"`
+	City      *string    `json:"city"       db:"city"`
+	BirthDate *time.Time `json:"birth_date" db:"birth_date"`
+	Weight    *float32   `json:"weight"     db:"weight"`
+	Height    *float32   `json:"height"     db:"height"`
 }
 
 // ToMap converts person struct to mpa

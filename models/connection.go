@@ -19,7 +19,7 @@ type ConnectionConfig struct {
 // OpenConnection opens the connection pool
 func OpenConnection(cfg ConnectionConfig) (connection *sql.DB, err error) {
 	// See https://github.com/Go-SQL-Driver/MySQL/#dsn-data-source-name
-	connectionString := fmt.Sprintf("%s:%s@%s(%s:%v)/%s?collation=utf8_general_ci",
+	connectionString := fmt.Sprintf("%s:%s@%s(%s:%v)/%s?collation=utf8_general_ci&parseTime=true",
 		cfg.User,
 		cfg.Password,
 		cfg.Protocol,
