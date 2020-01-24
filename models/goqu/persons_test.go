@@ -41,9 +41,9 @@ func TestGetPerson(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
-	columns := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	columns := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	birthDate, err := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
-	mock.ExpectQuery("SELECT `id`, `name`, `city`, `birthdate`, `weight`, `height` FROM `persons`").
+	mock.ExpectQuery("SELECT `id`, `name`, `city`, `birth_date`, `weight`, `height` FROM `persons`").
 		WithArgs("1", 1).
 		WillReturnRows(sqlmock.NewRows(columns).
 			AddRow("1", "Ash Ketchum", "Pallet Town", birthDate, float32(91), float32(1.81)))
@@ -63,9 +63,9 @@ func TestListPersons(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
-	columns := []string{"id", "name", "city", "birthdate", "weight", "height"}
+	columns := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	birthDate, err := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
-	mock.ExpectQuery("SELECT `id`, `name`, `city`, `birthdate`, `weight`, `height`").
+	mock.ExpectQuery("SELECT `id`, `name`, `city`, `birth_date`, `weight`, `height`").
 		WithArgs("1").
 		WillReturnRows(sqlmock.NewRows(columns).
 			AddRow("1", "Ash Ketchum", "Pallet Town", birthDate, float32(91), float32(1.81)))
