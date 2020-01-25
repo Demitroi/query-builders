@@ -37,7 +37,7 @@ func GetPersonByID(ctx iris.Context) {
 	}
 	if !found {
 		ctx.StatusCode(iris.StatusNotFound)
-		ctx.JSON(iris.Map{"error": "not founf"})
+		ctx.JSON(iris.Map{"error": "not found"})
 		return
 	}
 	ctx.StatusCode(iris.StatusOK)

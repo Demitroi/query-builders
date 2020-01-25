@@ -29,6 +29,7 @@ github.com/dgraph-io/badger v1.6.0/go.mod h1:zwt7syl517jmP8s94KqSxTlM6IMsdhYy6ps
 github.com/dgryski/go-farm v0.0.0-20190423205320-6a90982ecee2/go.mod h1:SqUrOPUnsFjfmXRMNPybcSiG0BgUW2AuFH8PAnS2iTw=
 github.com/didi/gendry v1.3.1 h1:D+NTtYzn0U/70BTJuP/ml3WU4CNwnaczDV7loknAks4=
 github.com/didi/gendry v1.3.1/go.mod h1:Csuh34TDGcEbZ0NsewpE6oHGycm2WGyqSovOM0+GBJk=
+github.com/didi/gendry v1.3.2 h1:xfSUzg7Zz+uuuZ9gl7iW1UVAgWI+jLkMv5gpzyARpD8=
 github.com/doug-martin/goqu/v9 v9.1.0 h1:ECkokaJvBfgblpzdHhdJIOpNrhsnFcyo3idXBcgtnKk=
 github.com/doug-martin/goqu/v9 v9.1.0/go.mod h1:GPZzBWikLe6aaCT2uBT5X3MTseGBYevzWiVjMl2wIWk=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=

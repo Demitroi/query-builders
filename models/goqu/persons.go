@@ -25,7 +25,7 @@ func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, 
 	where := goqu.Ex{
 		"id": id,
 	}
-	_, err = qb.database.From("persons").Select(selectFields...).Where(where).Prepared(true).ScanStruct(&person)
+	found, err = qb.database.From("persons").Select(selectFields...).Where(where).Prepared(true).ScanStruct(&person)
 	return
 }
 

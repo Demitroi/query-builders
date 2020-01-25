@@ -42,6 +42,9 @@ func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, 
 	}
 	err = scanner.ScanClose(rows, &person)
 	if err != nil {
+		if err == scanner.ErrEmptyResult {
+			return false, person, nil
+		}
 		return false, person, errors.Wrap(err, "Failed to scan")
 	}
 	return true, person, nil

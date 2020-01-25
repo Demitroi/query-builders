@@ -1,6 +1,8 @@
 package dbx
 
 import (
+	"database/sql"
+
 	"github.com/Demitroi/query-builders/models"
 	dbx "github.com/go-ozzo/ozzo-dbx"
 	"github.com/pkg/errors"
@@ -24,7 +26,13 @@ func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, 
 	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where := dbx.HashExp{"id": id}
 	err = qb.database.Select(selectFields...).From("persons").Where(where).One(&person)
-	return
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, person, nil
+		}
+		return false, person, errors.Wrap(err, "Failed to perform query")
+	}
+	return true, person, nil
 }
 
 func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
