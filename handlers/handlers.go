@@ -10,15 +10,20 @@ var QueryBuilder models.QueryBuilder
 
 // GetPersons lists persons
 func GetPersons(ctx iris.Context) {
-	var fp = models.FilterPerson{}
-	persons, err := QueryBuilder.ListPersons(fp)
-	if err != nil {
+	var fp models.FilterPerson
+	if err := ctx.ReadForm(&fp); err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(iris.Map{"error": err.Error()})
-		ctx.StatusCode(iris.StatusInternalServerError)
 		return
 	}
-	ctx.JSON(persons)
+	persons, err := QueryBuilder.ListPersons(fp)
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(iris.Map{"error": err.Error()})
+		return
+	}
 	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(persons)
 }
 
 // GetPersonByID gets a person by its id
