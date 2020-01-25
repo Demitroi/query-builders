@@ -23,18 +23,18 @@ func (p *Person) ToMap() map[string]interface{} {
 
 // FilterPerson filters the results of select statement
 type FilterPerson struct {
-	ID             *string    `field:"id"        form:"id"        operator:"="`
-	Name           *string    `field:"name"      form:"name"      operator:"="`
-	City           *string    `field:"city"      form:"city"      operator:"="`
-	BirthDate      *time.Time `field:"birthdate" form:"birthdate" operator:"="`
-	BirthDateStart *time.Time `field:"birthdate" form:"birthdate" operator:">="`
-	BirthDateEnd   *time.Time `field:"birthdate" form:"birthdate" operator:"<="`
-	Weight         *float32   `field:"weight"    form:"weight"    operator:"="`
-	WeightStart    *float32   `field:"weight"    form:"weight"    operator:">="`
-	WeightEnd      *float32   `field:"weight"    form:"weight"    operator:"<="`
-	Height         *float32   `field:"height"    form:"height"    operator:"="`
-	HeightStart    *float32   `field:"height"    form:"height"    operator:">="`
-	HeightEnd      *float32   `field:"height"    form:"height"    operator:"<="`
+	ID             *string    `field:"id"         form:"id"            operator:"="`
+	Name           *string    `field:"name"       form:"name"          operator:"="`
+	City           *string    `field:"city"       form:"city"          operator:"="`
+	BirthDate      *time.Time `field:"birth_date" form:"birth_dateeq"  operator:"="`
+	BirthDateStart *time.Time `field:"birth_date" form:"birth_dategte" operator:">="`
+	BirthDateEnd   *time.Time `field:"birth_date" form:"birth_datelte" operator:"<="`
+	Weight         *float32   `field:"weight"     form:"weight"        operator:"="`
+	WeightStart    *float32   `field:"weight"     form:"weight"        operator:">="`
+	WeightEnd      *float32   `field:"weight"     form:"weight"        operator:"<="`
+	Height         *float32   `field:"height"     form:"height"        operator:"="`
+	HeightStart    *float32   `field:"height"     form:"height"        operator:">="`
+	HeightEnd      *float32   `field:"height"     form:"height"        operator:"<="`
 }
 
 // ForEach iterates over the FilterPerson fields
