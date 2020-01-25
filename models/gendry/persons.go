@@ -27,24 +27,24 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
+func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
 	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where := map[string]interface{}{
 		"id =": id,
 	}
 	query, args, err := builder.BuildSelect("persons", where, selectFields)
 	if err != nil {
-		return person, errors.Wrap(err, "Failed to build query")
+		return false, person, errors.Wrap(err, "Failed to build query")
 	}
 	rows, err := qb.DB.Query(query, args...)
 	if err != nil {
-		return person, errors.Wrap(err, "Falied to perform query")
+		return false, person, errors.Wrap(err, "Falied to perform query")
 	}
 	err = scanner.ScanClose(rows, &person)
 	if err != nil {
-		return person, errors.Wrap(err, "Failed to scan")
+		return false, person, errors.Wrap(err, "Failed to scan")
 	}
-	return person, nil
+	return true, person, nil
 }
 
 func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {

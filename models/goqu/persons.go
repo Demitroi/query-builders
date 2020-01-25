@@ -20,7 +20,7 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
+func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
 	selectFields := []interface{}{"id", "name", "city", "birth_date", "weight", "height"}
 	where := goqu.Ex{
 		"id": id,

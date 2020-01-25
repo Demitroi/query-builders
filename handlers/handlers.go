@@ -28,7 +28,20 @@ func GetPersons(ctx iris.Context) {
 
 // GetPersonByID gets a person by its id
 func GetPersonByID(ctx iris.Context) {
-
+	id := ctx.Params().Get("id")
+	found, person, err := QueryBuilder.GetPerson(id)
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(iris.Map{"error": err.Error()})
+		return
+	}
+	if !found {
+		ctx.StatusCode(iris.StatusNotFound)
+		ctx.JSON(iris.Map{"error": "not founf"})
+		return
+	}
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(person)
 }
 
 // AddPerson adds a new person

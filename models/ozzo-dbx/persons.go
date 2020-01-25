@@ -20,7 +20,7 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (qb *queryBuilder) GetPerson(id string) (person models.Person, err error) {
+func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
 	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where := dbx.HashExp{"id": id}
 	err = qb.database.Select(selectFields...).From("persons").Where(where).One(&person)

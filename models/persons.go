@@ -45,7 +45,7 @@ func (fp *FilterPerson) ForEach(fn ForEachFunc) error {
 // PersonMethods represents the person's methods that must be implemented
 type PersonMethods interface {
 	AddPerson(person Person) (lastID string, err error)
-	GetPerson(id string) (person Person, err error)
+	GetPerson(id string) (found bool, person Person, err error)
 	ListPersons(filter FilterPerson) (persons []Person, err error)
 	UpdatePerson(id string, person Person) (err error)
 	DeletePerson(id string) (err error)

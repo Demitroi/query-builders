@@ -51,7 +51,7 @@ func TestGetPerson(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = qb.GetPerson("1")
+	_, _, err = qb.GetPerson("1")
 	if err != nil {
 		t.Error(err)
 	}
