@@ -83,5 +83,13 @@ func UpdatePerson(ctx iris.Context) {
 
 // DeletePerson deletes a person
 func DeletePerson(ctx iris.Context) {
-
+	id := ctx.Params().Get("id")
+	err := QueryBuilder.DeletePerson(id)
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(iris.Map{"error": err.Error()})
+		return
+	}
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(iris.Map{"msg": "OK"})
 }
