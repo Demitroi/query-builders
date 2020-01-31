@@ -10,6 +10,7 @@ func RegisterPersons(party iris.Party) {
 	crs := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
 		AllowCredentials: true,
+		AllowedMethods:   []string{iris.MethodGet, iris.MethodPost, iris.MethodPut, iris.MethodDelete},
 	})
 	persons := party.Party("/persons", crs).AllowMethods(iris.MethodOptions)
 	{
