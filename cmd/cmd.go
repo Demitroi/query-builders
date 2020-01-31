@@ -24,10 +24,10 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:          "query-builder [flags] [builder]",
-	Short:        "query-builder is an example of mysql databases in golang",
-	Args:         cobra.MinimumNArgs(1),
-	SilenceUsage: true,
+	Use:     "query-builder [flags] [builder]",
+	Short:   "query-builder is an example of mysql databases in golang",
+	Args:    cobra.MinimumNArgs(1),
+	Example: "query-builder gendry\nquery-builder goqu\nquery-builder dbx",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		builder := args[0]
 		// Open database connection
@@ -70,7 +70,7 @@ func init() {
 // Execute the cmd
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		fmt.Println(availableBuilders)
 		os.Exit(1)
 	}
 }
