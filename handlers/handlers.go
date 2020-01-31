@@ -46,7 +46,20 @@ func GetPersonByID(ctx iris.Context) {
 
 // AddPerson adds a new person
 func AddPerson(ctx iris.Context) {
-
+	var person models.Person
+	if err := ctx.ReadJSON(&person); err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(iris.Map{"error": err.Error()})
+		return
+	}
+	lastID, err := QueryBuilder.AddPerson(person)
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(iris.Map{"error": err.Error()})
+		return
+	}
+	ctx.StatusCode(iris.StatusCreated)
+	ctx.JSON(iris.Map{"id": lastID})
 }
 
 // UpdatePerson uptades a person
