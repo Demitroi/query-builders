@@ -328,3 +328,29 @@ func TestAddPerson(t *testing.T) {
 	handlers.QueryBuilder = dbx.New(db)
 	fn()
 }
+
+func TestAddPersonBadRequest(t *testing.T) {
+	// Create iris app
+	app := iris.New()
+	// Create party an register routes in root path
+	party := app.Party("/")
+	handlers.RegisterPersons(party)
+	// build the iris app
+	err := app.Build()
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Create recorder and serve
+	w := httptest.NewRecorder()
+	// Create a request
+	req, err := http.NewRequest(http.MethodPost, "/persons", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Do the request and catch the response code and body
+	app.ServeHTTP(w, req)
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("%T %v %s", handlers.QueryBuilder, w.Code, w.Body.String())
+		return
+	}
+}
