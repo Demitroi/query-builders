@@ -558,3 +558,93 @@ func TestUpdatePersonInternalServerError(t *testing.T) {
 	handlers.QueryBuilder = dbx.New(db)
 	fn()
 }
+
+func TestDeletePerson(t *testing.T) {
+	// Create database mock
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	// Create iris app
+	app := iris.New()
+	// Create party an register routes in root path
+	party := app.Party("/")
+	handlers.RegisterPersons(party)
+	// build the iris app
+	err = app.Build()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fn := func() {
+		// Request DELETE persons must exec an delete from
+		result := sqlmock.NewResult(0, 0)
+		mock.ExpectExec("DELETE FROM").
+			WillReturnResult(result)
+		// Create recorder and serve
+		w := httptest.NewRecorder()
+		// Create a request
+		req, err := http.NewRequest(http.MethodDelete, "/persons/1", nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		// Do the request and catch the response code and body
+		app.ServeHTTP(w, req)
+		if w.Code != http.StatusOK {
+			t.Errorf("%T %v %s", handlers.QueryBuilder, w.Code, w.Body.String())
+			return
+		}
+	}
+	// Create and assign the query builders
+	handlers.QueryBuilder = goqu.New(db)
+	fn()
+	handlers.QueryBuilder = gendry.New(db)
+	fn()
+	handlers.QueryBuilder = dbx.New(db)
+	fn()
+}
+
+func TestDeletePersonINternalServerError(t *testing.T) {
+	// Create database mock
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	// Create iris app
+	app := iris.New()
+	// Create party an register routes in root path
+	party := app.Party("/")
+	handlers.RegisterPersons(party)
+	// build the iris app
+	err = app.Build()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fn := func() {
+		err = errors.New("This is an error")
+		// Request DELETE persons must exec an delete from
+		mock.ExpectExec("DELETE FROM").
+			WillReturnError(err)
+		// Create recorder and serve
+		w := httptest.NewRecorder()
+		// Create a request
+		req, err := http.NewRequest(http.MethodDelete, "/persons/1", nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		// Do the request and catch the response code and body
+		app.ServeHTTP(w, req)
+		if w.Code != http.StatusInternalServerError {
+			t.Errorf("%T %v %s", handlers.QueryBuilder, w.Code, w.Body.String())
+			return
+		}
+	}
+	// Create and assign the query builders
+	handlers.QueryBuilder = goqu.New(db)
+	fn()
+	handlers.QueryBuilder = gendry.New(db)
+	fn()
+	handlers.QueryBuilder = dbx.New(db)
+	fn()
+}
