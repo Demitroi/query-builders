@@ -7,7 +7,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err error) {
+// AddPerson adds new person
+func (qb *QueryBuilder) AddPerson(person models.Person) (lastID string, err error) {
 	m := person.ToMap()
 	res, err := qb.database.Insert("persons").Rows(m).Executor().Exec()
 	if err != nil {
@@ -20,7 +21,8 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
+// GetPerson gets a person by id
+func (qb *QueryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
 	selectFields := []interface{}{"id", "name", "city", "birth_date", "weight", "height"}
 	where := goqu.Ex{
 		"id": id,
@@ -29,7 +31,8 @@ func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, 
 	return
 }
 
-func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
+// ListPersons lists persons using a filter
+func (qb *QueryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
 	selectFields := []interface{}{"id", "name", "city", "birth_date", "weight", "height"}
 	where, err := qb.GenerateWhere(&filter)
 	if err != nil {
@@ -42,7 +45,8 @@ func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []model
 	return
 }
 
-func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error) {
+// UpdatePerson updates a person by its id
+func (qb *QueryBuilder) UpdatePerson(id string, person models.Person) (err error) {
 	update := person.ToMap()
 	delete(update, "id") // Don't update the id
 	where := goqu.Ex{
@@ -55,7 +59,8 @@ func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error
 	return
 }
 
-func (qb *queryBuilder) DeletePerson(id string) (err error) {
+// DeletePerson deletes a person
+func (qb *QueryBuilder) DeletePerson(id string) (err error) {
 	where := goqu.Ex{
 		"id": id,
 	}

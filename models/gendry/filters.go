@@ -7,7 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (qb *queryBuilder) GenerateWhere(filter models.Filter) (where map[string]interface{}, err error) {
+// GenerateWhere generates the where map
+func (qb *QueryBuilder) GenerateWhere(filter models.Filter) (where map[string]interface{}, err error) {
 	where = make(map[string]interface{})
 	err = filter.ForEach(func(field string, operator string, value interface{}) error {
 		switch operator {

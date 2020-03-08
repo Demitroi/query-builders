@@ -9,7 +9,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-func (qb *queryBuilder) GenerateWhere(filter models.Filter) (where dbx.Expression, err error) {
+// GenerateWhere generates the where map
+func (qb *QueryBuilder) GenerateWhere(filter models.Filter) (where dbx.Expression, err error) {
 	var expressions []dbx.Expression
 	err = filter.ForEach(func(field string, operator string, value interface{}) error {
 		switch operator {

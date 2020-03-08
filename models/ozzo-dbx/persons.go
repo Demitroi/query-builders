@@ -9,7 +9,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err error) {
+// AddPerson adds new person
+func (qb *QueryBuilder) AddPerson(person models.Person) (lastID string, err error) {
 	m := person.ToMap()
 	res, err := qb.database.Insert("persons", m).Execute()
 	if err != nil {
@@ -22,7 +23,8 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
+// GetPerson gets a person by id
+func (qb *QueryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
 	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where := dbx.HashExp{"id": id}
 	err = qb.database.Select(selectFields...).From("persons").Where(where).One(&person)
@@ -35,7 +37,8 @@ func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, 
 	return true, person, nil
 }
 
-func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
+// ListPersons lists persons using a filter
+func (qb *QueryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
 	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where, err := qb.GenerateWhere(&filter)
 	if err != nil {
@@ -48,7 +51,8 @@ func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []model
 	return
 }
 
-func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error) {
+// UpdatePerson updates a person by its id
+func (qb *QueryBuilder) UpdatePerson(id string, person models.Person) (err error) {
 	m := person.ToMap()
 	delete(m, "id") // Don't update the id
 	where := dbx.HashExp{"id": id}
@@ -59,7 +63,8 @@ func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error
 	return
 }
 
-func (qb *queryBuilder) DeletePerson(id string) (err error) {
+// DeletePerson deletes a person
+func (qb *QueryBuilder) DeletePerson(id string) (err error) {
 	where := dbx.HashExp{"id": id}
 	_, err = qb.database.Delete("persons", where).Execute()
 	if err != nil {

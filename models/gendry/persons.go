@@ -8,7 +8,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err error) {
+// AddPerson adds new person
+func (qb *QueryBuilder) AddPerson(person models.Person) (lastID string, err error) {
 	var insert []map[string]interface{}
 	m := person.ToMap()
 	insert = append(insert, m)
@@ -27,7 +28,8 @@ func (qb *queryBuilder) AddPerson(person models.Person) (lastID string, err erro
 	return cast.ToString(id), nil
 }
 
-func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
+// GetPerson gets a person by id
+func (qb *QueryBuilder) GetPerson(id string) (found bool, person models.Person, err error) {
 	selectFields := []string{"id", "name", "city", "birth_date", "weight", "height"}
 	where := map[string]interface{}{
 		"id =": id,
@@ -50,7 +52,8 @@ func (qb *queryBuilder) GetPerson(id string) (found bool, person models.Person, 
 	return true, person, nil
 }
 
-func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
+// ListPersons lists persons using a filter
+func (qb *QueryBuilder) ListPersons(filter models.FilterPerson) (persons []models.Person, err error) {
 	where, err := qb.GenerateWhere(&filter)
 	if err != nil {
 		return persons, errors.Wrap(err, "Failed to generate where")
@@ -71,7 +74,8 @@ func (qb *queryBuilder) ListPersons(filter models.FilterPerson) (persons []model
 	return persons, nil
 }
 
-func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error) {
+// UpdatePerson updates a person by its id
+func (qb *QueryBuilder) UpdatePerson(id string, person models.Person) (err error) {
 	update := person.ToMap()
 	delete(update, "id") // Don't update the id
 	where := map[string]interface{}{
@@ -88,7 +92,8 @@ func (qb *queryBuilder) UpdatePerson(id string, person models.Person) (err error
 	return nil
 }
 
-func (qb *queryBuilder) DeletePerson(id string) (err error) {
+// DeletePerson deletes a person
+func (qb *QueryBuilder) DeletePerson(id string) (err error) {
 	where := map[string]interface{}{
 		"id =": id,
 	}

@@ -7,14 +7,18 @@ import (
 	dbx "github.com/go-ozzo/ozzo-dbx"
 )
 
-type queryBuilder struct {
+// QueryBuilder is the query builder to dbx
+type QueryBuilder struct {
 	// DB is the connection pool to database
 	DB       *sql.DB
 	database *dbx.DB
 }
 
 // New creates query builder
-func New(db *sql.DB) models.QueryBuilder {
+func New(db *sql.DB) *QueryBuilder {
 	database := dbx.NewFromDB(db, "mysql")
-	return &queryBuilder{db, database}
+	return &QueryBuilder{db, database}
 }
+
+// Verify that implements the interface
+var _ models.QueryBuilder = &QueryBuilder{}
