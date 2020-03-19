@@ -1,6 +1,7 @@
 package goqu_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -35,6 +36,25 @@ func TestAddPerson(t *testing.T) {
 	}
 }
 
+func TestAddPersonError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	mock.ExpectExec("INSERT INTO `persons`").
+		WillReturnError(errors.New("this is an error"))
+	qb := goqu.New(db)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var person = models.Person{}
+	_, err = qb.AddPerson(person)
+	if err == nil {
+		t.Error("Must return an error")
+	}
+}
+
 func TestGetPerson(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -54,6 +74,24 @@ func TestGetPerson(t *testing.T) {
 	_, _, err = qb.GetPerson("1")
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+func TestGetPersonError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	mock.ExpectQuery("SELECT `id`, `name`, `city`, `birth_date`, `weight`, `height` FROM `persons`").
+		WillReturnError(errors.New("this is an error"))
+	qb := goqu.New(db)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _, err = qb.GetPerson("1")
+	if err == nil {
+		t.Error("Must return an error")
 	}
 }
 
@@ -82,6 +120,24 @@ func TestListPersons(t *testing.T) {
 	}
 }
 
+func TestListPersonsError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	mock.ExpectQuery("SELECT `id`, `name`, `city`, `birth_date`, `weight`, `height`").
+		WillReturnError(errors.New("this is an error"))
+	qb := goqu.New(db)
+	filterPersons := models.FilterPerson{
+		ID: &[]string{"1"}[0],
+	}
+	_, err = qb.ListPersons(filterPersons)
+	if err == nil {
+		t.Error("Must return an error")
+	}
+}
+
 func TestUpdatePerson(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -98,6 +154,22 @@ func TestUpdatePerson(t *testing.T) {
 	}
 }
 
+func TestUpdatePersonError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	mock.ExpectExec("UPDATE `persons`").
+		WillReturnError(errors.New("this is an error"))
+	qb := goqu.New(db)
+	var person models.Person
+	err = qb.UpdatePerson("1", person)
+	if err == nil {
+		t.Error("Must return an error")
+	}
+}
+
 func TestDeletePerson(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -111,5 +183,20 @@ func TestDeletePerson(t *testing.T) {
 	err = qb.DeletePerson("1")
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+func TestDeletePersonError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	mock.ExpectExec("DELETE FROM `persons`").
+		WillReturnError(errors.New("this is an error"))
+	qb := goqu.New(db)
+	err = qb.DeletePerson("1")
+	if err == nil {
+		t.Error("Must return an error")
 	}
 }
