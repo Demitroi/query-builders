@@ -10,5 +10,3 @@ Example of SQL Query builders in GOlang to create API REST
 
 * usage instructions
 * api documentacion
-* more tests
-* dockerize
