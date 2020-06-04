@@ -18,11 +18,11 @@ Application started. Press CTRL+C to shut down.
 
 There are 3 query builders available.
 
-* [gendry](github.com/didi/gendry)
+* [gendry](https://github.com/didi/gendry)
 
-* [goqu](github.com/doug-martin/goqu)
+* [goqu](https://github.com/doug-martin/goqu)
 
-* [ozzo-dbx](github.com/go-ozzo/ozzo-dbx)
+* [ozzo-dbx](https://github.com/go-ozzo/ozzo-dbx)
 
 Also we can pass database params via args.
 
